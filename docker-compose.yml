@@ -1,0 +1,31 @@
+etcd:
+  image: gcr.io/google-containers/etcd:3.1.16
+  command: 
+    - /usr/local/bin/etcd 
+  ports:
+    - 4001:4001
+    - 7001:7001
+    - 2379:2379
+    - 2380:2380
+
+apiserver:
+  image: gcr.io/google-containers/hyperkube:v1.10.4
+  command: 
+    - /hyperkube
+    - apiserver
+    - "--etcd-servers=http://host.docker.internal:4001"
+    - "--service-cluster-ip-range=10.254.0.0/16"
+  ports:
+    - 8080:8080
+    - 443:443
+
+controller-manager:
+  image: gcr.io/google-containers/hyperkube:v1.10.4
+  command: 
+    - /hyperkube
+    - controller-manager
+    - "--etcd-servers=http://host.docker.internal:4001"
+    - "--service-cluster-ip-range=10.254.0.0/16"
+  ports:
+    - 8080:8080
+    - 443:443
